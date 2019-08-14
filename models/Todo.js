@@ -16,11 +16,12 @@ function getAll(){
 //That way when you don't find it, the .catch is triggered. 
 //This is better than doing an if-else inside of the .then()
 function getOne(id){
-    db.one(`SELECT * FROM todos WHERE id=$1;`, [id])
-        .then((data) => {
-            // console.log('here is the data:');
-            // console.log(data);
-        })
+    console.log(`GetOne's ID: ${id}`)
+    return db.one(`SELECT * FROM todos WHERE id=$1;`, [id])
+        // .then((data) => {
+        //     // console.log('here is the data:');
+        //     // console.log(data);
+        // })
         .catch((err) => {
             console.log(`uh oh`)
             console.log(err)
@@ -32,5 +33,5 @@ module.exports = {
     //e.g. getAll: getAll, getOne: getOne is the same as below;
     //This is called enhanced object literal syntax.
     getAll,
-    getOne,
+    getOne
 }
