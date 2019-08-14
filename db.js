@@ -1,6 +1,7 @@
 // Import the dotenv module
 //call the config method
 require('dotenv').config();
+const Todo = require('./models/Todo');
 
 const pgp = require('pg-promise')();
 const db = pgp({
@@ -10,4 +11,7 @@ const db = pgp({
 });
 
 console.log('Yay you did it');
-console.log(db);
+// console.log(db);
+
+
+module.exports = db;
