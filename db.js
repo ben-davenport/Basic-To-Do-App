@@ -5,7 +5,7 @@ require('dotenv').config();
 const pgp = require('pg-promise')({
     query:(e)=>console.log(e.query)
 })
-const Todo = require('./models/Todo');
+// const Todo = require('./models/Todo');
 
 const db = pgp({
     host: process.env.DB_HOST,
