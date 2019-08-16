@@ -71,13 +71,24 @@ app.get(`/users/:userId`, async (req,res)=>{
 
 app.post(`/users`, async (req, res) => {
     console.log("We got a post request!");
-    res.send("good job")
+    // res.send("good job")
     console.log('Here is the body:');
     console.log(req.body)
-    const newUserInfo = await User.createUser({
-        displayname: "jonathan",
-        username: "alwaysRight"
-    });
+    // const newUserInfo = await User.createUser({
+    //     displayname: req.body.displayname,
+    //     username: req.body.username
+    // });
+    const newUserInfo = await User.createUser(req.body);
+    res.json(newUserInfo)
+})
+
+app.post(`/user/:userId/todos`, async (req, res) => {
+    const theId = parseInt(req.params.userId, 10)
+    console.log("Task's post request sent!");
+    console.log('Here is the body:');
+    console.log(req.body)
+    const newTask = await Todo.createTodo(req.body, theId);
+    res.json(newTask)
 })
 
 app.listen(port)
