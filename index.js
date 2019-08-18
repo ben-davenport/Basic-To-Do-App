@@ -1,11 +1,19 @@
 // const http = require('http');
 //replace http with express
 const express = require('express');
-const Todo = require(`./models/Todo`)
-const User = require(`./models/User`)
+const Todo = require(`./models/Todo`);
+const User = require(`./models/User`);
+const { sanitizeBody } = require('express-validator');
+const es6Renderer = require('express-es6-template-engine');
 
 //Create the server and call it "app"
 const app = express();
+app.engine('html', es6Renderer);
+app.set('views', 'views')
+app.set('view engine', 'html')
+//All static assets go into the public folder.
+app.use(express.static('public'))
+
 
 //use the urlencoded middleware
 //to read POST bodies
@@ -18,6 +26,42 @@ const port = 4000;
 
 // const server = http.createServer((req, res) => {
     //replace with app.get()
+app.get('/', (req, res) => {
+    res.render('index', {
+        locals: {
+            message: "It is time for lunch"
+        },
+        partials: {
+            navbar: './navbar',
+        }
+    
+    }); 
+});
+
+app.get('/profile', (req, res) => {
+    res.render('profile', {
+        locals: {
+            message: "This is a profile"
+        },
+        partials: {
+            navbar: './navbar',
+        }
+    
+    }); 
+});
+
+app.get('/profile/todos', (req, res) => {
+    res.render('todo', {
+        locals: {
+            message: "This is a to-do list"
+        },
+        partials: {
+            navbar: './navbar',
+        }
+    
+    }); 
+});
+
 app.get(`/todos`,async (req, res) => {
     console.log(`You've got a request`);
     const allTodos = await Todo.getAll();
@@ -69,7 +113,7 @@ app.get(`/users/:userId`, async (req,res)=>{
 //     username: "who2who2"
 // })
 
-app.post(`/users`, async (req, res) => {
+app.post(`/users`, [sanitizeBody('username').escape(), sanitizeBody('displayname').escape()] ,async (req, res) => {
     console.log("We got a post request!");
     // res.send("good job")
     console.log('Here is the body:');
