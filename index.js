@@ -33,6 +33,7 @@ app.get('/', (req, res) => {
         },
         partials: {
             navbar: './navbar',
+            includes: 'includes'
         }
     
     }); 
@@ -45,21 +46,46 @@ app.get('/profile', (req, res) => {
         },
         partials: {
             navbar: './navbar',
+            includes: 'includes'
         }
     
     }); 
 });
 
-app.get('/profile/todos', (req, res) => {
+app.get('/profile/todos', async (req, res) => {
+    const userId = 1; //using hard coded id for now
+    const theUser = await User.getOne(userId)
+    //normally you would grab the UserId from the Server or from the URL
     res.render('todo', {
         locals: {
-            message: "This is a to-do list"
+            message: "This is a to-do list",
+            todos: theUser.todos
         },
         partials: {
             navbar: './navbar',
+            includes: 'includes'
         }
     
     }); 
+});
+
+///1. Allow the user to get the form for creating a todo
+app.get('/profile/todos/create',(req, res) => {
+    //render the "create new todo" form template
+    res.render('create-todo', {
+        partials: {
+            navbar: './navbar',
+            includes: 'includes'
+        }
+    })
+});
+
+///2. Process the body of the form they POST
+app.post('/profile/todos/create', [sanitizeBody('task').escape(), sanitizeBody('user_id').escape()], async (req,res) => {
+    console.log(req.body)
+    //handle the req.body from the crate new todo form 
+    const taskId = await Todo.createTodo(req.body, req.body.user_id)
+    res.send(taskId);
 });
 
 app.get(`/todos`,async (req, res) => {
